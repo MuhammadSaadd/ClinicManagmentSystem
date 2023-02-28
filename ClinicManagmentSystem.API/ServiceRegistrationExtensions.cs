@@ -1,7 +1,4 @@
-﻿using ClinicManagmentSystem.API.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace ClinicManagmentSystem.API;
+﻿namespace ClinicManagmentSystem.API;
 
 public static class ServiceRegistrationExtensions
 {
@@ -16,6 +13,8 @@ public static class ServiceRegistrationExtensions
         // add the DbContext
         services.AddDbContext<AppDBContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("SqlConnection")));
+
+        services.AddScoped<IClinicServices, ClinicServices>();
 
         return services;
     }

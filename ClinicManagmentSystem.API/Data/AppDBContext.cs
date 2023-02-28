@@ -1,7 +1,4 @@
-﻿using ClinicManagmentSystem.API.Data.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace ClinicManagmentSystem.API.Data;
+﻿namespace ClinicManagmentSystem.API.Data;
 
 public class AppDBContext : DbContext
 {

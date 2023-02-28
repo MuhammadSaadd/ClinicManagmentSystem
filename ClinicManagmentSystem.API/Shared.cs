@@ -1,0 +1,10 @@
+﻿global using ClinicManagmentSystem.API;
+global using ClinicManagmentSystem.API.Data;
+global using ClinicManagmentSystem.API.Data.Models;
+global using ClinicManagmentSystem.API.Controllers;
+global using ClinicManagmentSystem.API.Business.IServices;
+global using ClinicManagmentSystem.API.Business.Services;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Mvc;
+global using AutoMapper;
+global using ClinicManagmentSystem.API.Dtos;
