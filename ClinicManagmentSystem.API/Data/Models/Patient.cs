@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ClinicManagmentSystem.API.Data.Models;
+﻿namespace ClinicManagmentSystem.API.Data.Models;
 
 public class Patient
 {

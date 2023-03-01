@@ -1,4 +1,6 @@
-﻿namespace ClinicManagmentSystem.API.Business.Services;
+﻿using System.Linq.Expressions;
+
+namespace ClinicManagmentSystem.API.Business.Services;
 
 public class ClinicServices : IClinicServices
 {
@@ -15,10 +17,10 @@ public class ClinicServices : IClinicServices
     }
 
     public Task<List<Clinic>> GetAsync()
-    {    
+    {
         return _context.Clinics.ToListAsync();
     }
-    
+
     public Task<Clinic?> GetAsync(string title)
     {
         return _context.Clinics.FirstOrDefaultAsync(c => c.Title == title);
@@ -35,7 +37,7 @@ public class ClinicServices : IClinicServices
         _context.Update(clinic);
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task DeleteAsync(Clinic clinic)
     {
         _context.Remove(clinic);

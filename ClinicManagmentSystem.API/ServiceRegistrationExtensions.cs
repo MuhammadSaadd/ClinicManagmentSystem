@@ -4,7 +4,7 @@ public static class ServiceRegistrationExtensions
 {
     public static IServiceCollection RegisterBusinessServices(this IServiceCollection services)
     {
-
+        services.AddScoped<IClinicServices, ClinicServices>();
         return services;
     }
 
@@ -13,8 +13,6 @@ public static class ServiceRegistrationExtensions
         // add the DbContext
         services.AddDbContext<AppDBContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("SqlConnection")));
-
-        services.AddScoped<IClinicServices, ClinicServices>();
 
         return services;
     }
