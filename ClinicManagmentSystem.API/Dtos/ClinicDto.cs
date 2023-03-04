@@ -19,7 +19,7 @@ public class ClinicDto : IValidatableObject
         if (string.IsNullOrEmpty(Address))
             yield return new ValidationResult("Address is required", new[] { nameof(Address) });
 
-        if (Address?.Length > 255)
-            yield return new ValidationResult("Address cannot be longer than 255 characters", new[] { nameof(Address) });
+        if (Address.Length > 500)
+            yield return new ValidationResult("Address cannot be longer than 500 characters", new[] { nameof(Address) });
     }
 }

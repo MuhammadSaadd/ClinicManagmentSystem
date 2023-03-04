@@ -13,6 +13,7 @@ public class MappingProfile : Profile
         CreateMap<PhysicianDto, Physician>();
 
         //Shift
-
+        CreateMap<Shift, ShiftDto>();
+        CreateMap<ShiftDto, Shift>();
     }
 }

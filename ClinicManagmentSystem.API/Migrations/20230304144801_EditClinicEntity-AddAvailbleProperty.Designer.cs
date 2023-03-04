@@ -4,6 +4,7 @@ using ClinicManagmentSystem.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinicManagmentSystem.API.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230304144801_EditClinicEntity-AddAvailbleProperty")]
+    partial class EditClinicEntityAddAvailbleProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,8 +65,8 @@ namespace ClinicManagmentSystem.API.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("Availiable")
                         .HasColumnType("bit");
@@ -140,7 +142,7 @@ namespace ClinicManagmentSystem.API.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FisrtName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -180,11 +182,10 @@ namespace ClinicManagmentSystem.API.Migrations
 
             modelBuilder.Entity("ClinicManagmentSystem.API.Data.Models.Shift", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("ClinicId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClinicId")
+                    b.Property<Guid>("PhysicianId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Finished")
@@ -193,15 +194,13 @@ namespace ClinicManagmentSystem.API.Migrations
                     b.Property<DateTime>("From")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("PhysicianId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClinicId");
+                    b.HasKey("ClinicId", "PhysicianId");
 
                     b.HasIndex("PhysicianId");
 

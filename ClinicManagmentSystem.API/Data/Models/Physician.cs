@@ -6,7 +6,7 @@ public class Physician
     [MaxLength(25)]
     public string SSN { get; set; } = string.Empty;
     [MaxLength(255)]
-    public string FisrtName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
     [MaxLength(255)]
     public string LastName { get; set; } = string.Empty;
     [MaxLength(255)]

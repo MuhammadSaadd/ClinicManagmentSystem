@@ -53,7 +53,7 @@ public class AppDBContext : DbContext
         // Shift configurations
         modelBuilder.Entity<Shift>()
             .ToTable("Shifts")
-            .HasKey(s => new { s.ClinicId, s.PhysicianId });
+            .HasKey(s => s.Id);
 
         modelBuilder.Entity<Shift>()
             .HasOne(s => s.Clinic)
@@ -92,3 +92,4 @@ public class AppDBContext : DbContext
             .HasForeignKey<EpisodeVisit>(ev => ev.AppointmentId);
     }
 }
+
