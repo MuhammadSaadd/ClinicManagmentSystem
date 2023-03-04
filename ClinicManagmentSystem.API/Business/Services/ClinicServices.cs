@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace ClinicManagmentSystem.API.Business.Services;
+﻿namespace ClinicManagmentSystem.API.Business.Services;
 
 public class ClinicServices : IClinicServices
 {

@@ -7,5 +7,12 @@ public class MappingProfile : Profile
         // Clinic
         CreateMap<Clinic, ClinicDto>();
         CreateMap<ClinicDto, Clinic>();
+
+        // Physician
+        CreateMap<Physician, PhysicianDto>();
+        CreateMap<PhysicianDto, Physician>();
+
+        //Shift
+
     }
 }

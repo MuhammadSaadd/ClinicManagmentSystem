@@ -1,4 +1,3 @@
-using ClinicManagmentSystem.API.MapperProfiles;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

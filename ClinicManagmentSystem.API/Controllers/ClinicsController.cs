@@ -4,51 +4,51 @@
 [ApiController]
 public class ClinicsController : ControllerBase
 {
-    private readonly IClinicServices _clinicService;
+    private readonly IClinicServices _clinicServices;
     private readonly IMapper _mapper;
 
-    public ClinicsController(IClinicServices clinicService, IMapper mapper)
+    public ClinicsController(IClinicServices clinicServices, IMapper mapper)
     {
-        _clinicService = clinicService;
+        _clinicServices = clinicServices;
         _mapper = mapper;
     }
+
+    [HttpGet("GetById/{id}")]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        var clinic = await _clinicServices.GetAsync(id);
+
+        if (clinic is null)
+            return NotFound();
+
+        var dto = _mapper.Map<ClinicDto>(clinic);
+
+        return Ok(dto);
+    }
+
+    [HttpGet("GetByTitle/{title}")]
+    public async Task<IActionResult> Get(string title)
+    {
+        var clinic = await _clinicServices.GetAsync(title);
+
+        if (clinic is null)
+            return NotFound();
+
+        var dto = _mapper.Map<ClinicDto>(clinic);
+
+        return Ok(dto);
+    }
+
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var clinics = await _clinicService.GetAsync();
+        var clinics = await _clinicServices.GetAsync();
 
-        var dto = _mapper.Map<IEnumerable<ClinicDto>>(clinics);
+        var clinicDtos = _mapper.Map<IEnumerable<ClinicDto>>(clinics);
 
-        return Ok(dto);
+        return Ok(clinicDtos);
     }
-
-    [HttpGet("Get")]
-    public async Task<IActionResult> Get(string title)
-    {
-        var clinic = await _clinicService.GetAsync(title);
-
-        if (clinic is null)
-            return NotFound();
-
-        var dto = _mapper.Map<ClinicDto>(clinic);
-
-        return Ok(dto);
-    }
-
-    [HttpGet("Get/{id}")]
-    public async Task<IActionResult> Get(Guid id)
-    {
-        var clinic = await _clinicService.GetAsync(id);
-
-        if (clinic is null)
-            return NotFound();
-
-        var dto = _mapper.Map<ClinicDto>(clinic);
-
-        return Ok(dto);
-    }
-
 
     [HttpPost("Add")]
     public async Task<IActionResult> Add([FromBody] ClinicDto clinicDto)
@@ -60,15 +60,15 @@ public class ClinicsController : ControllerBase
 
         var clinic = _mapper.Map<Clinic>(clinicDto);
 
-        await _clinicService.AddAsync(clinic);
+        await _clinicServices.AddAsync(clinic);
 
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("Edit/{id}")]
     public async Task<IActionResult> Edit(Guid id, [FromBody] ClinicDto clinicDto)
     {
-        var clinic = await _clinicService.GetAsync(id);
+        var clinic = await _clinicServices.GetAsync(id);
 
         if (clinic is null)
             return NotFound();
@@ -76,20 +76,20 @@ public class ClinicsController : ControllerBase
         clinicDto.Id = id;
 
         clinic = _mapper.Map(clinicDto, clinic);
-        await _clinicService.UpdateAsync(clinic);
+        await _clinicServices.UpdateAsync(clinic);
 
-        return Ok();
+        return NoContent();
     }
 
-    [HttpDelete("Remove")]
+    [HttpDelete("Remove/{id}")]
     public async Task<IActionResult> Remove(Guid id)
     {
-        var clinic = await _clinicService.GetAsync(id);
+        var clinic = await _clinicServices.GetAsync(id);
 
         if (clinic is null)
             return NotFound();
 
-        await _clinicService.DeleteAsync(clinic);
+        await _clinicServices.DeleteAsync(clinic);
 
         return NoContent();
     }
