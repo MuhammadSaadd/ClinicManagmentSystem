@@ -1,16 +1,15 @@
-﻿#nullable disable
-namespace ClinicManagmentSystem.API.Dtos;
+﻿namespace ClinicManagmentSystem.API.Dtos;
 
 public class PhysicianDto : IValidatableObject
 {
     public Guid? Id { get; set; }
-    public string SSN { get; set; }
-    public string FisrtName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Specialty { get; set; }
+    public string SSN { get; set; } = string.Empty;
+    public string FisrtName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string? Password { get; set; }
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string Specialty { get; set; } = string.Empty;
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -41,7 +40,7 @@ public class PhysicianDto : IValidatableObject
         if (string.IsNullOrEmpty(Password))
             yield return new ValidationResult("Password is required", new[] { nameof(Password) });
 
-        if (PasswordValidator.Validate(Password) == false)
+        if (PasswordValidator.Validate(Password!) == false)
             yield return new ValidationResult("Password must be at least 6 characters," +
                 "Contains at least one lowercase letter, one uppercase letter, one number," +
                 " and one special character."

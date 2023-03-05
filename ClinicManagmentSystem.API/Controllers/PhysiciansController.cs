@@ -18,48 +18,40 @@ public class PhysiciansController : ControllerBase
     [HttpGet("GetById/{id}")]
     public async Task<IActionResult> Get(Guid id)
     {
-        var physician = await _physicianServices.GetAsync(id);
+        var physicianDto = await _physicianServices.GetAsync(id);
 
-        if (physician is null)
-            return NotFound();
+        if (physicianDto is null)
+            return NotFound();;
 
-        var dto = _mapper.Map<PhysicianDto>(physician);
-
-        return Ok(dto);
+        return Ok(physicianDto);
     }
 
     [HttpGet("GetBySSN/{ssn}")]
     public async Task<IActionResult> GetBySSN(string ssn)
     {
-        var physician = await _physicianServices.GetBySSNAsync(ssn);
+        var physicianDto = await _physicianServices.GetBySSNAsync(ssn);
 
-        if (physician is null)
+        if (physicianDto is null)
             return NotFound();
 
-        var dto = _mapper.Map<PhysicianDto>(physician);
-
-        return Ok(dto);
+        return Ok(physicianDto);
     }
 
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var physicians = await _physicianServices.GetAsync();
+        var physicianDtos = await _physicianServices.GetAsync();
 
-        var physiciansDto = _mapper.Map<IEnumerable<PhysicianDto>>(physicians);
-
-        return Ok(physiciansDto);
+        return Ok(physicianDtos);
     }
 
     [HttpGet("GetAll/{speciality}")]
     public async Task<IActionResult> GetAll(string speciality)
     {
-        var physicians = await _physicianServices.GetBySpecialtyAsync(speciality);
+        var physicianDtos = await _physicianServices.GetBySpecialtyAsync(speciality);
 
-        var physiciansDto = _mapper.Map<IEnumerable<PhysicianDto>>(physicians);
-
-        return Ok(physiciansDto);
+        return Ok(physicianDtos);
     }
 
     [HttpPost("Add")]
@@ -70,7 +62,10 @@ public class PhysiciansController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        physicianDto.Password = _authenticationService.EncodePassword(physicianDto.Password);
+        if (await _physicianServices.GetByEmailAsync(physicianDto.Email) is not null)
+            return BadRequest("This Email already exists");
+
+        physicianDto.Password = _authenticationService.EncodePassword(physicianDto.Password!);
 
         var physician = _mapper.Map<Physician>(physicianDto);
 
@@ -89,22 +84,20 @@ public class PhysiciansController : ControllerBase
 
         physicianDto.Id = id;
 
-        physician = _mapper.Map(physicianDto, physician);
-
-        await _physicianServices.UpdateAsync(physician);
+        await _physicianServices.UpdateAsync(physicianDto);
 
         return NoContent();
     }
 
-    [HttpDelete("Remove/{id}")]
-    public async Task<IActionResult> Remove(Guid id)
+    [HttpDelete("Delete/{id}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        var physician = await _physicianServices.GetAsync(id);
+        var physicianDto = await _physicianServices.GetAsync(id);
 
-        if (physician is null)
+        if (physicianDto is null)
             return NotFound();
 
-        await _physicianServices.DeleteAsync(physician);
+        await _physicianServices.DeleteAsync(physicianDto);
 
         return NoContent();
     }

@@ -21,7 +21,10 @@ public class AuthenticationController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        physicianDto.Password = _authenticationService.EncodePassword(physicianDto.Password);
+        if(await _physicianServices.GetByEmailAsync(physicianDto.Email) is not null)
+            return BadRequest("This Email already exists");
+
+        physicianDto.Password = _authenticationService.EncodePassword(physicianDto.Password!);
 
         var physician = _mapper.Map<Physician>(physicianDto);
 
@@ -41,7 +44,7 @@ public class AuthenticationController : ControllerBase
         if (physician is null)
             return NotFound();
 
-        if(_authenticationService.VerifyPassword(loginDto.Password, physician.Password) == false)
+        if(_authenticationService.VerifyPassword(loginDto.Password, physician.Password!) == false)
             return BadRequest("Password is not correct");
 
         return Ok();

@@ -2,12 +2,12 @@
 
 public interface IPhysicianServices
 {
-    Task<Physician?> GetAsync(Guid id);
-    Task<Physician?> GetBySSNAsync(string ssn);
-    Task<Physician?> GetByEmailAsync(string email);
-    Task<List<Physician>> GetAsync();
-    Task<List<Physician>> GetBySpecialtyAsync(string specialty);
+    Task<PhysicianDto?> GetAsync(Guid id);
+    Task<PhysicianDto?> GetBySSNAsync(string ssn);
+    Task<PhysicianDto?> GetByEmailAsync(string email);
+    Task<List<PhysicianDto>> GetAsync();
+    Task<List<PhysicianDto>> GetBySpecialtyAsync(string specialty);
     Task AddAsync(Physician physician);
-    Task UpdateAsync(Physician physician);
-    Task DeleteAsync(Physician physician);
+    Task UpdateAsync(PhysicianDto physicianDto);
+    Task DeleteAsync(PhysicianDto physicianDto);
 }
