@@ -27,11 +27,12 @@ public class ShiftServices : IShiftServices
 
     public async Task<bool> IsShiftAvailable(ShiftRequestDto shiftDto)
     {
-        var currentShifts = await _context.Shifts
-            .Where(sh => sh.PhysicianId == shiftDto.PhysicianId
-                   && sh.ClinicId == shiftDto.ClinicId
-                   && sh.Finished == false)
-            .ToListAsync();
+        var currentShifts = await _context.Shifts.Where(sh => sh.Finished == false).ToListAsync();
+        
+        //.Where(sh => sh.PhysicianId == shiftDto.PhysicianId
+        //       && sh.ClinicId == shiftDto.ClinicId
+        //       && sh.Finished == false)
+        //.ToListAsync();
 
         foreach (var shift in currentShifts)
         {
