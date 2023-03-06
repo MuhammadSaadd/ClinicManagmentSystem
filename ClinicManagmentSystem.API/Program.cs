@@ -1,4 +1,3 @@
-using Hangfire;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,9 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.RegisterBusinessServices();
-
 builder.Services.RegisterDataServices(builder.Configuration);
+
+builder.Services.RegisterBusinessServices();
 
 builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
 
@@ -30,6 +29,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseHangfireDashboard("/dashboard");
+app.MapHangfireDashboard();
 
 app.MapControllers();
 

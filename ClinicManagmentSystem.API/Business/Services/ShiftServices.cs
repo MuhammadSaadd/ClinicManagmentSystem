@@ -19,22 +19,42 @@ public class ShiftServices : IShiftServices
         return await _context.Shifts.ToListAsync();
     }
 
-    
     public async Task AddAsync(Shift shift)
     {
         await _context.Shifts.AddAsync(shift);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(Shift shift)
+    public async Task<bool> IsShiftAvailable(ShiftRequestDto shiftDto)
     {
-        _context.Shifts.Update(shift);
-        await _context.SaveChangesAsync();
+        var currentShifts = await _context.Shifts
+            .Where(sh => sh.PhysicianId == shiftDto.PhysicianId
+                   && sh.ClinicId == shiftDto.ClinicId
+                   && sh.Finished == false)
+            .ToListAsync();
+
+        foreach (var shift in currentShifts)
+        {
+            // in case : new shift start before existed shift finish
+            if (shiftDto.StartTime < shift.EndTime)
+                return false;
+
+            // in case : new shift end after existed shift should start
+            if (shiftDto.EndTime > shift.StartTime)
+                return false;
+        }
+
+        return true;
     }
 
-    public async Task DeleteAsync(Shift shift)
+    public async Task MarkShiftAsFinished(Guid id)
     {
-        _context.Shifts.Remove(shift); 
+        var shift = await _context.Shifts.SingleOrDefaultAsync(sh => sh.Id == id);
+
+        shift!.Finished = true;
+
+        _context.Shifts.Update(shift);
+
         await _context.SaveChangesAsync();
     }
 }

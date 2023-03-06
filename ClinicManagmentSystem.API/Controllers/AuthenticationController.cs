@@ -16,17 +16,19 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public async Task<IActionResult> Register(PhysicianDto physicianDto)
+    public async Task<IActionResult> Register([FromBody] PhysicianRequestDto physicianDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        if(await _physicianServices.GetByEmailAsync(physicianDto.Email) is not null)
+        if (await _physicianServices.GetByEmailAsync(physicianDto.Email) is not null)
             return BadRequest("This Email already exists");
 
         physicianDto.Password = _authenticationService.EncodePassword(physicianDto.Password!);
 
         var physician = _mapper.Map<Physician>(physicianDto);
+
+        physician.Id = Guid.NewGuid();
 
         await _physicianServices.AddAsync(physician);
 
@@ -34,7 +36,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> Login(LoginDto loginDto)
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -44,7 +46,7 @@ public class AuthenticationController : ControllerBase
         if (physician is null)
             return NotFound();
 
-        if(_authenticationService.VerifyPassword(loginDto.Password, physician.Password!) == false)
+        if (_authenticationService.VerifyPassword(loginDto.Password, physician.Password!) == false)
             return BadRequest("Password is not correct");
 
         return Ok();

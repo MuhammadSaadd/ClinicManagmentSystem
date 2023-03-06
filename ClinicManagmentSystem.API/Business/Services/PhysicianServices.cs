@@ -3,27 +3,24 @@
 public class PhysicianServices : IPhysicianServices
 {
     private readonly AppDBContext _context;
-    private readonly IMapper _mapper;
 
-    public PhysicianServices(AppDBContext context, IMapper mapper)
+    public PhysicianServices(AppDBContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
-    public async Task<PhysicianDto?> GetAsync(Guid id)
+    public async Task<PhysicianResponseDto?> GetAsync(Guid id)
     {
         var physician = await _context.Physicians
                 .SingleOrDefaultAsync(x => x.Id == id);
 
-        var dto = new PhysicianDto()
+        var dto = new PhysicianResponseDto()
         {
             Id = physician!.Id,
             SSN = physician.SSN,
             FisrtName = physician.FirstName,
             LastName = physician.LastName,
             Email = physician.Email,
-            Password = null,
             PhoneNumber = physician.PhoneNumber,
             Specialty = physician.Specialty
         };
@@ -31,19 +28,18 @@ public class PhysicianServices : IPhysicianServices
         return dto;
     }
 
-    public async Task<PhysicianDto?> GetBySSNAsync(string ssn)
+    public async Task<PhysicianResponseDto?> GetBySSNAsync(string ssn)
     {
         var physician = await _context.Physicians
                 .SingleOrDefaultAsync(x => x.SSN == ssn);
 
-        var dto = new PhysicianDto()
+        var dto = new PhysicianResponseDto()
         {
             Id = physician!.Id,
             SSN = physician.SSN,
             FisrtName = physician.FirstName,
             LastName = physician.LastName,
             Email = physician.Email,
-            Password = null,
             PhoneNumber = physician.PhoneNumber,
             Specialty = physician.Specialty
         };
@@ -51,47 +47,42 @@ public class PhysicianServices : IPhysicianServices
         return dto;
     }
 
-    public async Task<PhysicianDto?> GetByEmailAsync(string email)
+    public async Task<LoginDto?> GetByEmailAsync(string email)
     {
         var physician = await _context.Physicians
                 .SingleOrDefaultAsync(x => x.Email == email);
 
-        var dto = new PhysicianDto()
+        var dto = new LoginDto()
         {
-            Id = physician!.Id,
-            SSN = physician.SSN,
-            FisrtName = physician.FirstName,
-            LastName = physician.LastName,
-            Email = physician.Email,
+            Email = physician!.Email,
             Password = physician.Password,
-            PhoneNumber = physician.PhoneNumber,
-            Specialty = physician.Specialty
         };
 
         return dto;
     }
 
-    public async Task<List<PhysicianDto>> GetAsync()
+    public async Task<List<PhysicianResponseDto>> GetAsync()
     {
-        var dtos = await _context.Physicians.Select(p => new PhysicianDto()
-        {
-            Id = p.Id,
-            SSN = p.SSN,
-            FisrtName = p.FirstName,
-            LastName = p.LastName,
-            Email = p.Email,
-            PhoneNumber = p.PhoneNumber,
-            Specialty = p.Specialty
-        }).ToListAsync();
+        var dtos = await _context.Physicians
+            .Select(p => new PhysicianResponseDto()
+            {
+                Id = p.Id,
+                SSN = p.SSN,
+                FisrtName = p.FirstName,
+                LastName = p.LastName,
+                Email = p.Email,
+                PhoneNumber = p.PhoneNumber,
+                Specialty = p.Specialty
+            }).ToListAsync();
 
         return dtos;
     }
 
-    public async Task<List<PhysicianDto>> GetBySpecialtyAsync(string specialty)
+    public async Task<List<PhysicianResponseDto>> GetBySpecialtyAsync(string specialty)
     {
         var dtos = await _context.Physicians
             .Where(p => p.Specialty == specialty)
-            .Select(p => new PhysicianDto()
+            .Select(p => new PhysicianResponseDto()
             {
                 Id = p.Id,
                 SSN = p.SSN,
@@ -111,27 +102,15 @@ public class PhysicianServices : IPhysicianServices
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(PhysicianDto physicianDto)
+    public async Task UpdateAsync(Physician physician)
     {
-        var physician = await _context.Physicians
-            .SingleOrDefaultAsync(p => p.Id == physicianDto.Id);
-        
-        physician = _mapper.Map(physicianDto, physician);
-
-        _context.Physicians.Update(physician!);
-
+        _context.Physicians.Update(physician);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(PhysicianDto physicianDto)
+    public async Task DeleteAsync(Physician physician)
     {
-        var physician = await _context.Physicians
-                .SingleOrDefaultAsync(p => p.Id == physicianDto.Id);
-
-        physician = _mapper.Map(physicianDto, physician);
-
-        _context.Physicians.Remove(physician!);
-
+        _context.Physicians.Remove(physician);
         await _context.SaveChangesAsync();
     }
 }

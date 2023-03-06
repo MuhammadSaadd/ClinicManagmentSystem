@@ -41,5 +41,4 @@ public class ClinicServices : IClinicServices
         _context.Remove(clinic);
         await _context.SaveChangesAsync();
     }
-
 }

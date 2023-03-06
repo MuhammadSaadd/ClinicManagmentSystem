@@ -1,4 +1,4 @@
-﻿using Hangfire;
+﻿using Hangfire.SqlServer;
 
 namespace ClinicManagmentSystem.API;
 
@@ -8,10 +8,23 @@ public static class ServiceRegistrationExtensions
     {
         // add the DbContext
         services.AddDbContext<AppDBContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("ClinicsConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("SqlConnection"))
+        );
 
-        services.AddHangfire(hangfire =>
-            hangfire.UseSqlServerStorage(configuration.GetConnectionString("ClinicsConnection")));
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseSqlServerStorage(configuration.GetConnectionString("SqlConnection"), new SqlServerStorageOptions
+            {
+                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                QueuePollInterval = TimeSpan.Zero,
+                UseRecommendedIsolationLevel = true,
+                DisableGlobalLocks = true
+            }));
+
+        services.AddHangfireServer();
 
         services.Configure<MongoDBContext>(configuration.GetSection("PrescriptionsConnection"));
 

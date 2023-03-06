@@ -21,7 +21,7 @@ public class PhysiciansController : ControllerBase
         var physicianDto = await _physicianServices.GetAsync(id);
 
         if (physicianDto is null)
-            return NotFound();;
+            return NotFound();
 
         return Ok(physicianDto);
     }
@@ -55,7 +55,7 @@ public class PhysiciansController : ControllerBase
     }
 
     [HttpPost("Add")]
-    public async Task<IActionResult> Add([FromBody] PhysicianDto physicianDto)
+    public async Task<IActionResult> Add([FromBody] PhysicianRequestDto physicianDto)
     {
         if (!ModelState.IsValid)
         {
@@ -68,6 +68,7 @@ public class PhysiciansController : ControllerBase
         physicianDto.Password = _authenticationService.EncodePassword(physicianDto.Password!);
 
         var physician = _mapper.Map<Physician>(physicianDto);
+        physician.Id = Guid.NewGuid();
 
         await _physicianServices.AddAsync(physician);
 
@@ -75,16 +76,15 @@ public class PhysiciansController : ControllerBase
     }
 
     [HttpPut("Edit/{id}")]
-    public async Task<IActionResult> Edit(Guid id, [FromBody] PhysicianDto physicianDto)
+    public async Task<IActionResult> Edit(Guid id, [FromBody] PhysicianRequestDto physicianDto)
     {
-        var physician = await _physicianServices.GetAsync(id);
-
-        if (physician is null)
+        if (await _physicianServices.GetAsync(id) is null)
             return NotFound();
 
-        physicianDto.Id = id;
+        var physician = _mapper.Map<Physician>(physicianDto);
+        physician.Id = id;
 
-        await _physicianServices.UpdateAsync(physicianDto);
+        await _physicianServices.UpdateAsync(physician);
 
         return NoContent();
     }
@@ -97,7 +97,10 @@ public class PhysiciansController : ControllerBase
         if (physicianDto is null)
             return NotFound();
 
-        await _physicianServices.DeleteAsync(physicianDto);
+        var physician = _mapper.Map<Physician>(physicianDto);
+        physician.Id = id;
+
+        await _physicianServices.DeleteAsync(physician);
 
         return NoContent();
     }

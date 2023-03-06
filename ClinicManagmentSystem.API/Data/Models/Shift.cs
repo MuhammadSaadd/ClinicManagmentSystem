@@ -4,12 +4,16 @@ public class Shift
 {
     public Guid Id { get; set; }
     [DataType(DataType.DateTime)]
-    public DateTime From { get; set; }
+    public DateTime StartTime { get; set; }
+
     [DataType(DataType.DateTime)]
-    public DateTime To { get; set; }
+    public DateTime EndTime { get; set; }
+
     public bool Finished { get; set; } = false;
+
     public Guid ClinicId { get; set; }
-    public Guid PhysicianId { get; set; }
     public Clinic Clinic { get; set; } = null!;
+
+    public Guid PhysicianId { get; set; }
     public Physician Physician { get; set; } = null!;
 }

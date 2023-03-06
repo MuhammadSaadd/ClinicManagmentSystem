@@ -10,7 +10,7 @@ namespace ClinicManagmentSystem.API.Migrations
         {
             migrationBuilder.CreateTable(
                 name: "Shifts",
-                columns: table => new 
+                columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClinicId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),

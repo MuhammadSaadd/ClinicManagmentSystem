@@ -25,7 +25,7 @@ public class ShiftsController : ControllerBase
         if (shift == null)
             return BadRequest();
 
-        var dto = _mapper.Map<ShiftDto>(shift);
+        var dto = _mapper.Map<ShiftResponseDto>(shift);
 
         return Ok(dto);
     }
@@ -35,29 +35,43 @@ public class ShiftsController : ControllerBase
     {
         var shifts = await _shiftServices.GetAllAsync();
 
-        var shiftsDto = _mapper.Map<IEnumerable<ShiftDto>>(shifts);
+        var shiftsDto = _mapper.Map<IEnumerable<ShiftResponseDto>>(shifts);
 
         return Ok(shiftsDto);
     }
 
-    [HttpPost("Book")]
-    public async Task<IActionResult> Book([FromBody] ShiftDto shiftDto)
+    [HttpPost("Add")]
+    public async Task<IActionResult> Add([FromBody] ShiftRequestDto shiftDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        // المفروض دلوقتي هنحجز شيفت المفروض اربط الشيفت بالدكتور والعيادة-- اللي هيحجز الشيفت الدكتور
-        // يعني المفروض اخد الايدي بتاعه وايدي العيادة اللي هيحجز فيها
-
+        // clinc Validations
         var clinic = await _clinicsServices.GetAsync(shiftDto.ClinicId);
 
         if (clinic is null)
             return BadRequest("Clinic is not existed");
-        
-        if(clinic.Availiable == false)
-            return BadRequest("Clinic is not Availiable");
 
+        // physician validations
+        var physician = await _physicianServices.GetAsync(shiftDto.PhysicianId);
 
+        if (physician is null)
+            return BadRequest("Physician is not existed");
+
+        // shifts validations
+        if (await _shiftServices.IsShiftAvailable(shiftDto) == false)
+            return BadRequest("This Shift is not Available");
+
+        // create shift
+        var shift = _mapper.Map<Shift>(shiftDto);
+        shift.Id = Guid.NewGuid();
+        shift.Finished = false;
+
+        // add shift 
+        await _shiftServices.AddAsync(shift);
+
+        // Mark Shift As Finished
+        BackgroundJob.Schedule(() => _shiftServices.MarkShiftAsFinished(shift.Id), shift.EndTime);
 
         return Ok();
     }
