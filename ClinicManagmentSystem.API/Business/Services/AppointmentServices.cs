@@ -49,7 +49,7 @@ public class AppointmentServices : IAppointmentServices
     }
 
     public async Task CancelAppointmentAsync(Appointment appointment)
-    {               
+    {
         _context.Appointments.Update(appointment);
 
         await _context.SaveChangesAsync();

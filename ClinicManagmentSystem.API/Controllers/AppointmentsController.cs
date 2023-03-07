@@ -23,8 +23,6 @@ public class AppointmentsController : ControllerBase
         _mapper = mapper;
     }
 
-
-
     [HttpGet("GetById/{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -121,7 +119,7 @@ public class AppointmentsController : ControllerBase
         // delete episode Visit Job from hangfire queue
         var episodeVisitJob = await _episodeVisitJobServices.GetAsync(appointment.JopId);
 
-        if(episodeVisitJob is not null)
+        if (episodeVisitJob is not null)
         {
             BackgroundJob.Delete(episodeVisitJob.EpisodeVisitJobId);
 

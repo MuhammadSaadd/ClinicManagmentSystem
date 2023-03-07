@@ -5,14 +5,17 @@
 public class PhysiciansController : ControllerBase
 {
     private readonly IPhysicianServices _physicianServices;
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IAuthenticationService _authenticationServices;
+    private readonly IMailingService _mailingServices;
     private readonly IMapper _mapper;
 
-    public PhysiciansController(IPhysicianServices physicianServices, IMapper mapper, IAuthenticationService authenticationService)
+    public PhysiciansController(IPhysicianServices physicianServices, IMapper mapper
+        , IAuthenticationService authenticationServices, IMailingService mailingServices)
     {
         _physicianServices = physicianServices;
         _mapper = mapper;
-        _authenticationService = authenticationService;
+        _authenticationServices = authenticationServices;
+        _mailingServices = mailingServices;
     }
 
     [HttpGet("GetById/{id}")]
@@ -57,6 +60,12 @@ public class PhysiciansController : ControllerBase
     [HttpPost("Add")]
     public async Task<IActionResult> Add([FromBody] PhysicianRequestDto physicianDto)
     {
+        string subject = "Registeration is Complete!";
+        string body = $"Hi Dr. {physicianDto.FirstName} {physicianDto.LastName}," +
+            $"Thank you for registering with our system. " +
+            $"We are excited to have you as a part of our community and look forward to" +
+            $" providing you with an exceptional user experience.";
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
@@ -65,12 +74,15 @@ public class PhysiciansController : ControllerBase
         if (await _physicianServices.GetByEmailAsync(physicianDto.Email) is not null)
             return BadRequest("This Email already exists");
 
-        physicianDto.Password = _authenticationService.EncodePassword(physicianDto.Password!);
+        physicianDto.Password = _authenticationServices.EncodePassword(physicianDto.Password!);
 
         var physician = _mapper.Map<Physician>(physicianDto);
         physician.Id = Guid.NewGuid();
 
         await _physicianServices.AddAsync(physician);
+
+        await _mailingServices
+            .SendEmailAsync(physician.Email, subject, body);
 
         return Ok();
     }
