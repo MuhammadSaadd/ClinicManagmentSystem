@@ -9,7 +9,8 @@ public class ShiftsController : ControllerBase
     private readonly IPhysicianServices _physicianServices;
     private readonly IMapper _mapper;
 
-    public ShiftsController(IShiftServices shiftServices, IMapper mapper, IClinicServices clinicsServices, IPhysicianServices physicianServices)
+    public ShiftsController(IShiftServices shiftServices, IMapper mapper
+        , IClinicServices clinicsServices, IPhysicianServices physicianServices)
     {
         _shiftServices = shiftServices;
         _mapper = mapper;
@@ -46,7 +47,7 @@ public class ShiftsController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        // clinc Validations
+        // clinic Validations
         var clinic = await _clinicsServices.GetAsync(shiftDto.ClinicId);
 
         if (clinic is null)
@@ -59,7 +60,7 @@ public class ShiftsController : ControllerBase
             return BadRequest("Physician is not existed");
 
         // shifts validations
-        if (await _shiftServices.IsShiftAvailable(shiftDto) == false)
+        if (await _shiftServices.IsShiftAvailableAsync(shiftDto) == false)
             return BadRequest("This Shift is not Available");
 
         // create shift
@@ -71,7 +72,8 @@ public class ShiftsController : ControllerBase
         await _shiftServices.AddAsync(shift);
 
         // Mark Shift As Finished
-        BackgroundJob.Schedule(() => _shiftServices.MarkShiftAsFinished(shift.Id), shift.EndTime);
+        BackgroundJob.Schedule(() =>
+            _shiftServices.MarkShiftAsFinishedAsync(shift.Id), shift.EndTime);
 
         return Ok();
     }

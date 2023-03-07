@@ -1,6 +1,6 @@
-﻿namespace ClinicManagmentSystem.API.Data.Models;
+﻿namespace ClinicManagmentSystem.API.Dtos;
 
-public class Patient
+public class PatientResponseDto
 {
     public Guid Id { get; set; }
     [MaxLength(255)]
@@ -10,5 +10,4 @@ public class Patient
     [MaxLength(25)]
     public string PhoneNumber { get; set; } = string.Empty;
     public int Age { get; set; }
-    public ICollection<Appointment>? Appointments { get; set; }
 }

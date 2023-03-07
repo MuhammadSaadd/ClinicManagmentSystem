@@ -18,7 +18,7 @@ public class PrescriptionServices : IPrescriptionServices
     }
 
 
-    public async Task<List<Prescription>> GetAsync() =>
+    public async Task<IEnumerable<Prescription>> GetAsync() =>
         await _prescriptionCollection.Find(_ => true).ToListAsync();
 
     public async Task<Prescription?> GetAsync(string id) =>

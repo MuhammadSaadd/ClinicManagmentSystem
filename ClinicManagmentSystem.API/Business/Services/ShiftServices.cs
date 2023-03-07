@@ -14,7 +14,7 @@ public class ShiftServices : IShiftServices
         return await _context.Shifts.SingleOrDefaultAsync(sh => sh.Id == id);
     }
 
-    public async Task<List<Shift>> GetAllAsync()
+    public async Task<IEnumerable<Shift>> GetAllAsync()
     {
         return await _context.Shifts.ToListAsync();
     }
@@ -25,30 +25,18 @@ public class ShiftServices : IShiftServices
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> IsShiftAvailable(ShiftRequestDto shiftDto)
+    public async Task<bool> IsShiftAvailableAsync(ShiftRequestDto shiftDto)
     {
-        var currentShifts = await _context.Shifts.Where(sh => sh.Finished == false).ToListAsync();
-        
-        //.Where(sh => sh.PhysicianId == shiftDto.PhysicianId
-        //       && sh.ClinicId == shiftDto.ClinicId
-        //       && sh.Finished == false)
-        //.ToListAsync();
+        var oldShifts = await _context.Shifts
+            .Where(oldShift => oldShift.Finished == false)
+            .Where(oldShift => oldShift.StartTime > shiftDto.StartTime)
+            .Where(oldShift => oldShift.EndTime < shiftDto.EndTime)
+            .ToListAsync();
 
-        foreach (var shift in currentShifts)
-        {
-            // in case : new shift start before existed shift finish
-            if (shiftDto.StartTime < shift.EndTime)
-                return false;
-
-            // in case : new shift end after existed shift should start
-            if (shiftDto.EndTime > shift.StartTime)
-                return false;
-        }
-
-        return true;
+        return !oldShifts.Any();
     }
 
-    public async Task MarkShiftAsFinished(Guid id)
+    public async Task MarkShiftAsFinishedAsync(Guid id)
     {
         var shift = await _context.Shifts.SingleOrDefaultAsync(sh => sh.Id == id);
 
@@ -59,3 +47,11 @@ public class ShiftServices : IShiftServices
         await _context.SaveChangesAsync();
     }
 }
+
+
+#region IsShiftAvailableAsync
+// var currentShifts = await _context.Shifts
+// .Where(sh => sh.PhysicianId == shiftDto.PhysicianId)
+// .Where(sh => sh.ClinicId == shiftDto.ClinicId)
+// .Where(sh => sh.Finished == false)
+#endregion

@@ -10,13 +10,13 @@ public class PhysicianRequestDto : PhysicianDto, IValidatableObject
             yield return new ValidationResult("SSN required", new[] { nameof(SSN) });
 
         if (SSN.Length > 25)
-            yield return new ValidationResult("First Name cannot be longer than 25 characters", new[] { nameof(SSN) });
+            yield return new ValidationResult("SSN cannot be longer than 25 characters", new[] { nameof(SSN) });
 
-        if (string.IsNullOrEmpty(FisrtName))
-            yield return new ValidationResult("Fisrt Name is required", new[] { nameof(FisrtName) });
+        if (string.IsNullOrEmpty(FirstName))
+            yield return new ValidationResult("First Name is required", new[] { nameof(FirstName) });
 
-        if (FisrtName.Length > 255)
-            yield return new ValidationResult("First Name cannot be longer than 255 characters", new[] { nameof(FisrtName) });
+        if (FirstName.Length > 255)
+            yield return new ValidationResult("First Name cannot be longer than 255 characters", new[] { nameof(FirstName) });
 
         if (string.IsNullOrEmpty(LastName))
             yield return new ValidationResult("Last Name is required", new[] { nameof(LastName) });

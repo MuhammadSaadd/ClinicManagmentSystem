@@ -2,7 +2,7 @@
 
 public interface IClinicServices
 {
-    Task<List<Clinic>> GetAsync();
+    Task<IEnumerable<Clinic>> GetAsync();
     Task<Clinic?> GetAsync(Guid id);
     Task<Clinic?> GetAsync(string title);
     Task AddAsync(Clinic clinic);

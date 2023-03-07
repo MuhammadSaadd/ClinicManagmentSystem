@@ -37,7 +37,9 @@ public static class ServiceRegistrationExtensions
         services.AddScoped<IPhysicianServices, PhysicianServices>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IShiftServices, ShiftServices>();
-        services.AddSingleton<IPrescriptionServices, PrescriptionServices>();
+        services.AddScoped<IPatientServices, PatientServices>();
+        services.AddScoped<IPrescriptionServices, PrescriptionServices>();
+        services.AddScoped<IAppointmentServices, AppointmentServices>();
 
         return services;
     }

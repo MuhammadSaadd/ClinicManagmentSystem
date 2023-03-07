@@ -21,7 +21,7 @@ public class ClinicsController : ControllerBase
         if (clinic is null)
             return NotFound();
 
-        var dto = _mapper.Map<ClinicDto>(clinic);
+        var dto = _mapper.Map<ClinicResponseDto>(clinic);
 
         return Ok(dto);
     }
@@ -34,24 +34,23 @@ public class ClinicsController : ControllerBase
         if (clinic is null)
             return NotFound();
 
-        var dto = _mapper.Map<ClinicDto>(clinic);
+        var dto = _mapper.Map<ClinicResponseDto>(clinic);
 
         return Ok(dto);
     }
-
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
         var clinics = await _clinicServices.GetAsync();
 
-        var clinicDtos = _mapper.Map<IEnumerable<ClinicDto>>(clinics);
+        var clinicDtos = _mapper.Map<IEnumerable<ClinicResponseDto>>(clinics);
 
         return Ok(clinicDtos);
     }
 
     [HttpPost("Add")]
-    public async Task<IActionResult> Add([FromBody] ClinicDto clinicDto)
+    public async Task<IActionResult> Add([FromBody] ClinicRequestDto clinicDto)
     {
         if (!ModelState.IsValid)
         {
@@ -59,23 +58,23 @@ public class ClinicsController : ControllerBase
         }
 
         var clinic = _mapper.Map<Clinic>(clinicDto);
+        clinic.Id = Guid.NewGuid();
 
         await _clinicServices.AddAsync(clinic);
 
-        return NoContent();
+        return Ok();
     }
 
     [HttpPut("Edit/{id}")]
-    public async Task<IActionResult> Edit(Guid id, [FromBody] ClinicDto clinicDto)
+    public async Task<IActionResult> Edit(Guid id, [FromBody] ClinicRequestDto clinicDto)
     {
         var clinic = await _clinicServices.GetAsync(id);
 
         if (clinic is null)
             return NotFound();
 
-        clinicDto.Id = id;
-
         clinic = _mapper.Map(clinicDto, clinic);
+
         await _clinicServices.UpdateAsync(clinic);
 
         return NoContent();

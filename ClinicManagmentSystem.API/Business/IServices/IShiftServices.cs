@@ -3,8 +3,8 @@
 public interface IShiftServices
 {
     Task<Shift?> GetAsync(Guid id);
-    Task<List<Shift>> GetAllAsync();
+    Task<IEnumerable<Shift>> GetAllAsync();
     Task AddAsync(Shift shift);
-    Task<bool> IsShiftAvailable(ShiftRequestDto shiftDto);
-    Task MarkShiftAsFinished(Guid id);
+    Task<bool> IsShiftAvailableAsync(ShiftRequestDto shiftDto);
+    Task MarkShiftAsFinishedAsync(Guid id);
 }

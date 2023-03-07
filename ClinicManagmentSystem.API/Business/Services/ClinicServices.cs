@@ -9,19 +9,19 @@ public class ClinicServices : IClinicServices
         _context = context;
     }
 
-    public Task<Clinic?> GetAsync(Guid id)
+    public async Task<Clinic?> GetAsync(Guid id)
     {
-        return _context.Clinics.FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.Clinics.FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public Task<List<Clinic>> GetAsync()
+    public async Task<IEnumerable<Clinic>> GetAsync()
     {
-        return _context.Clinics.ToListAsync();
+        return await _context.Clinics.ToListAsync();
     }
 
-    public Task<Clinic?> GetAsync(string title)
+    public async Task<Clinic?> GetAsync(string title)
     {
-        return _context.Clinics.FirstOrDefaultAsync(c => c.Title == title);
+        return await _context.Clinics.FirstOrDefaultAsync(c => c.Title == title);
     }
 
     public async Task AddAsync(Clinic clinic)

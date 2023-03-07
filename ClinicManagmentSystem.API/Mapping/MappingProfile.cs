@@ -5,15 +5,19 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         // Clinic
-        CreateMap<Clinic, ClinicDto>().ReverseMap();
+        CreateMap<Clinic, ClinicResponseDto>().ReverseMap();
+        CreateMap<Clinic, ClinicRequestDto>().ReverseMap();
 
         // Physician
         CreateMap<Physician, PhysicianRequestDto>().ReverseMap();
-
         CreateMap<Physician, PhysicianResponseDto>().ReverseMap();
 
-        //Shift
+        // Shift
         CreateMap<Shift, ShiftRequestDto>().ReverseMap();
         CreateMap<Shift, ShiftResponseDto>().ReverseMap();
+
+        // Patient
+        CreateMap<Patient, PatientRequestDto>().ReverseMap();
+        CreateMap<Patient, PatientResponseDto>().ReverseMap();
     }
 }

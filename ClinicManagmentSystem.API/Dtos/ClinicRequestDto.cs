@@ -1,11 +1,9 @@
 ﻿namespace ClinicManagmentSystem.API.Dtos;
 
-public class ClinicDto : IValidatableObject
+public class ClinicRequestDto : IValidatableObject
 {
-    public Guid? Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
-
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

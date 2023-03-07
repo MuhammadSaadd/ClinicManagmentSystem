@@ -18,7 +18,7 @@ public class PhysicianServices : IPhysicianServices
         {
             Id = physician!.Id,
             SSN = physician.SSN,
-            FisrtName = physician.FirstName,
+            FirstName = physician.FirstName,
             LastName = physician.LastName,
             Email = physician.Email,
             PhoneNumber = physician.PhoneNumber,
@@ -37,7 +37,7 @@ public class PhysicianServices : IPhysicianServices
         {
             Id = physician!.Id,
             SSN = physician.SSN,
-            FisrtName = physician.FirstName,
+            FirstName = physician.FirstName,
             LastName = physician.LastName,
             Email = physician.Email,
             PhoneNumber = physician.PhoneNumber,
@@ -61,14 +61,14 @@ public class PhysicianServices : IPhysicianServices
         return dto;
     }
 
-    public async Task<List<PhysicianResponseDto>> GetAsync()
+    public async Task<IEnumerable<PhysicianResponseDto>> GetAsync()
     {
         var dtos = await _context.Physicians
             .Select(p => new PhysicianResponseDto()
             {
                 Id = p.Id,
                 SSN = p.SSN,
-                FisrtName = p.FirstName,
+                FirstName = p.FirstName,
                 LastName = p.LastName,
                 Email = p.Email,
                 PhoneNumber = p.PhoneNumber,
@@ -78,7 +78,7 @@ public class PhysicianServices : IPhysicianServices
         return dtos;
     }
 
-    public async Task<List<PhysicianResponseDto>> GetBySpecialtyAsync(string specialty)
+    public async Task<IEnumerable<PhysicianResponseDto>> GetBySpecialtyAsync(string specialty)
     {
         var dtos = await _context.Physicians
             .Where(p => p.Specialty == specialty)
@@ -86,7 +86,7 @@ public class PhysicianServices : IPhysicianServices
             {
                 Id = p.Id,
                 SSN = p.SSN,
-                FisrtName = p.FirstName,
+                FirstName = p.FirstName,
                 LastName = p.LastName,
                 Email = p.Email,
                 PhoneNumber = p.PhoneNumber,
