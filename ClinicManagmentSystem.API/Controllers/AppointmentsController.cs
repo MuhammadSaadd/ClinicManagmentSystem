@@ -124,6 +124,7 @@ public class AppointmentsController : ControllerBase
         if(episodeVisitJob is not null)
         {
             BackgroundJob.Delete(episodeVisitJob.EpisodeVisitJobId);
+
             await _episodeVisitJobServices.DeleteAsync(episodeVisitJob);
         }
 

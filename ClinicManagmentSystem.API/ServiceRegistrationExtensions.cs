@@ -28,6 +28,8 @@ public static class ServiceRegistrationExtensions
 
         services.Configure<MongoDBContext>(configuration.GetSection("PrescriptionsConnection"));
 
+        services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+
         return services;
     }
 
@@ -42,6 +44,7 @@ public static class ServiceRegistrationExtensions
         services.AddScoped<IAppointmentServices, AppointmentServices>();
         services.AddScoped<IEpisodeVisitServices, EpisodeVisitServices>();
         services.AddScoped<IEpisodeVisitJobServices, EpisodeVisitJobServices>();
+        services.AddTransient<IMailingService, MailingService>();
 
         return services;
     }
