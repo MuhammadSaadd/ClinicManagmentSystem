@@ -37,7 +37,7 @@ public class AppointmentServices : IAppointmentServices
         return !oldAppointments.Any();
     }
 
-    public async Task MarkAppointmentAsEposideVisitAsync(Guid id)
+    public async Task MarkAppointmentAsEpisodeVisitAsync(Guid id)
     {
         var appointment = await _context.Appointments.SingleOrDefaultAsync(sh => sh.Id == id);
 
@@ -48,8 +48,10 @@ public class AppointmentServices : IAppointmentServices
         await _context.SaveChangesAsync();
     }
 
-    public Task CancelAppointmentAsync(Guid id)
-    {
-        throw new NotImplementedException();
+    public async Task CancelAppointmentAsync(Appointment appointment)
+    {               
+        _context.Appointments.Update(appointment);
+
+        await _context.SaveChangesAsync();
     }
 }

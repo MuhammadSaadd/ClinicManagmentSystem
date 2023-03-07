@@ -4,6 +4,7 @@ using ClinicManagmentSystem.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinicManagmentSystem.API.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230307145549_AddJobId-AppointmentsTable")]
+    partial class AddJobIdAppointmentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,7 +94,8 @@ namespace ClinicManagmentSystem.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AppointmentId")
+                    b.Property<Guid?>("AppointmentId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -101,20 +104,6 @@ namespace ClinicManagmentSystem.API.Migrations
                         .IsUnique();
 
                     b.ToTable("EpisodeVisits", (string)null);
-                });
-
-            modelBuilder.Entity("ClinicManagmentSystem.API.Data.Models.EpisodeVisitJob", b =>
-                {
-                    b.Property<string>("EpisodeVisitJobId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AppointmentJobId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EpisodeVisitJobId");
-
-                    b.ToTable("EpisodeVisitJobs", (string)null);
                 });
 
             modelBuilder.Entity("ClinicManagmentSystem.API.Data.Models.Patient", b =>

@@ -6,6 +6,6 @@ public interface IAppointmentServices
     Task<IEnumerable<Appointment>> GetAllAsync();
     Task AddAsync(Appointment appointment);
     Task<bool> IsAppointmentAvailableAsync(AppointmentRequestDto appointmentDto);
-    Task MarkAppointmentAsEposideVisitAsync(Guid id);
-    Task CancelAppointmentAsync(Guid id);
+    Task MarkAppointmentAsEpisodeVisitAsync(Guid id);
+    Task CancelAppointmentAsync(Appointment appointment);
 }

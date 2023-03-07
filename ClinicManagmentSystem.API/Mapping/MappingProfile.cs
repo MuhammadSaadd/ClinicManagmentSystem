@@ -19,5 +19,9 @@ public class MappingProfile : Profile
         // Patient
         CreateMap<Patient, PatientRequestDto>().ReverseMap();
         CreateMap<Patient, PatientResponseDto>().ReverseMap();
+
+        // Appointment
+        CreateMap<Appointment, AppointmentRequestDto>().ReverseMap();
+        CreateMap<Appointment, AppointmentResponseDto>().ReverseMap();
     }
 }

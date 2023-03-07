@@ -40,6 +40,8 @@ public static class ServiceRegistrationExtensions
         services.AddScoped<IPatientServices, PatientServices>();
         services.AddScoped<IPrescriptionServices, PrescriptionServices>();
         services.AddScoped<IAppointmentServices, AppointmentServices>();
+        services.AddScoped<IEpisodeVisitServices, EpisodeVisitServices>();
+        services.AddScoped<IEpisodeVisitJobServices, EpisodeVisitJobServices>();
 
         return services;
     }

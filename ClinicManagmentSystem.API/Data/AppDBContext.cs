@@ -8,6 +8,7 @@ public class AppDBContext : DbContext
     public DbSet<Patient> Patients => Set<Patient>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<EpisodeVisit> EpisodeVisits => Set<EpisodeVisit>();
+    public DbSet<EpisodeVisitJob> EpisodeVisitJobs => Set<EpisodeVisitJob>();
 
 
     public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
@@ -90,6 +91,11 @@ public class AppDBContext : DbContext
             .HasOne(ev => ev.Appointment)
             .WithOne(a => a.EpisodeVisit)
             .HasForeignKey<EpisodeVisit>(ev => ev.AppointmentId);
+
+        // Episode Visit Jobs
+        modelBuilder.Entity<EpisodeVisitJob>()
+            .ToTable("EpisodeVisitJobs")
+            .HasKey(evj => evj.EpisodeVisitJobId);
     }
 }
 

@@ -7,16 +7,23 @@ public class AppointmentsController : ControllerBase
     private readonly IAppointmentServices _appointmentServices;
     private readonly IPhysicianServices _physicianServices;
     private readonly IPatientServices _patientServices;
+    private readonly IEpisodeVisitServices _episodeVisitServices;
+    private readonly IEpisodeVisitJobServices _episodeVisitJobServices;
     private readonly IMapper _mapper;
 
     public AppointmentsController(IAppointmentServices appointmentServices,
-        IPhysicianServices physicianServices, IPatientServices patientServices, IMapper mapper)
+        IPhysicianServices physicianServices, IPatientServices patientServices, IMapper mapper,
+        IEpisodeVisitServices episodeVisitServices, IEpisodeVisitJobServices episodeVisitJobServices)
     {
         _appointmentServices = appointmentServices;
         _physicianServices = physicianServices;
         _patientServices = patientServices;
+        _episodeVisitServices = episodeVisitServices;
+        _episodeVisitJobServices = episodeVisitJobServices;
         _mapper = mapper;
     }
+
+
 
     [HttpGet("GetById/{id}")]
     public async Task<IActionResult> GetById(Guid id)
@@ -69,15 +76,57 @@ public class AppointmentsController : ControllerBase
         appointment.EpisodeVisitFlag = false;
         appointment.Canceled = false;
 
+        // Mark Appointment As EposideVisit
+        string appointmentJobId = BackgroundJob.Schedule(() =>
+            _appointmentServices.MarkAppointmentAsEpisodeVisitAsync(appointment.Id), appointment.EndDate);
+
+        appointment.JopId = appointmentJobId;
+
         // add appointment
         await _appointmentServices.AddAsync(appointment);
 
-        // Mark Appointment As EposideVisit
-        BackgroundJob.Schedule(() =>
-            _appointmentServices.MarkAppointmentAsEposideVisitAsync(appointment.Id), appointment.EndDate);
+        // Add a record to episodeVisits table      
+        string episodeVisitJobId = BackgroundJob.Schedule(() =>
+            _episodeVisitServices.AddAsync(appointment.Id), appointment.EndDate);
 
-        // Add a record to EposideVisits table
+
+        // add episode Visit Job
+        var episodeVisitJob = new EpisodeVisitJob
+        {
+            EpisodeVisitJobId = episodeVisitJobId,
+            AppointmentJobId = appointment.JopId
+        };
+
+        await _episodeVisitJobServices.AddAsync(episodeVisitJob);
 
         return Ok();
+    }
+
+
+    [HttpPut("Cancel")]
+    public async Task<IActionResult> Cancel(Guid id)
+    {
+        var appointment = await _appointmentServices.GetAsync(id);
+
+        if (appointment is null)
+            return NotFound();
+
+        appointment.Canceled = true;
+
+        await _appointmentServices.CancelAppointmentAsync(appointment);
+
+        // delete appointment from hangfire queue
+        BackgroundJob.Delete(appointment.JopId);
+
+        // delete episode Visit Job from hangfire queue
+        var episodeVisitJob = await _episodeVisitJobServices.GetAsync(appointment.JopId);
+
+        if(episodeVisitJob is not null)
+        {
+            BackgroundJob.Delete(episodeVisitJob.EpisodeVisitJobId);
+            await _episodeVisitJobServices.DeleteAsync(episodeVisitJob);
+        }
+
+        return NoContent();
     }
 }
