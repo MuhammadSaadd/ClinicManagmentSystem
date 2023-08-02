@@ -74,7 +74,7 @@ public class AppointmentsController : ControllerBase
         appointment.EpisodeVisitFlag = false;
         appointment.Canceled = false;
 
-        // Mark Appointment As EposideVisit
+        // Mark Appointment As EpisodeVisit
         string appointmentJobId = BackgroundJob.Schedule(() =>
             _appointmentServices.MarkAppointmentAsEpisodeVisitAsync(appointment.Id), appointment.EndDate);
 

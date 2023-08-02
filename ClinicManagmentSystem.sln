@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicManagmentSystem.API", "ClinicManagmentSystem.API\ClinicManagmentSystem.API.csproj", "{9AB750E0-1FA5-4D8C-85C6-AFDD148958DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicManagementSystem.Test", "ClinicManagementSystem.Test\ClinicManagementSystem.Test.csproj", "{12f44914-391c-4103-856b-3f28bcb9d9df}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A2E9B5D3-4D93-4119-A0D7-08CD793C48D6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
