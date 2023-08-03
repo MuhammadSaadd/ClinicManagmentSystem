@@ -2,8 +2,9 @@ name: Continuous Integartion and Deployment
 
 on:
   push:
-    - dev
-    
+    branches:
+      - dev
+
 jobs:
   build:
     steps:
