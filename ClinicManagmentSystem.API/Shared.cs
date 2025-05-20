@@ -1,0 +1,13 @@
+﻿global using AutoMapper;
+global using ClinicManagmentSystem.API;
+global using ClinicManagmentSystem.API.Business.IServices;
+global using ClinicManagmentSystem.API.Business.Services;
+global using ClinicManagmentSystem.API.Data;
+global using ClinicManagmentSystem.API.Data.Models;
+global using ClinicManagmentSystem.API.Dtos;
+global using ClinicManagmentSystem.API.MapperProfiles;
+global using ClinicManagmentSystem.API.Validations;
+global using Hangfire;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.EntityFrameworkCore;
+global using System.ComponentModel.DataAnnotations;

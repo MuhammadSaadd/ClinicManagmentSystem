@@ -1,0 +1,28 @@
+name: Continuous Integartion and Deployment
+
+on:
+    push:
+        branches:
+            - dev
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out code
+              uses: actions/checkout@v3 
+
+            - name: Setup .NET 7
+              uses: actions/setup-dotnet@v3
+              with:
+                dotnet-version: '3.1.x'
+
+            - name: Restore Dependicies
+              run: dotnet restore
+
+            - name: Build app
+              run: dotnet build -c Release --no-restore 
+
+            - name: Run automated tests
+              run: dotnet test -c Release --no-build
+      
